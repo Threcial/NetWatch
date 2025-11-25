@@ -98,7 +98,7 @@ class MainWindow(FluentWindow):
         self.log_page = LogPage(self)
         self.settings_page = SettingsPage(self)
 
-        # ✨ 必须：给每个子界面设置唯一的 objectName
+        # 给每个子界面设置唯一的 objectName
         self.device_page.setObjectName("devices")
         self.log_page.setObjectName("logs")
         self.settings_page.setObjectName("settings")

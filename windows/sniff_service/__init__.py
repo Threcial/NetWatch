@@ -1,0 +1,1 @@
+from .main import new_device_notify
