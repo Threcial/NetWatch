@@ -2,19 +2,19 @@ from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import Qt
 from qfluentwidgets import (
     FluentWindow,
-    NavigationInterface,
     NavigationItemPosition,
     setTheme,
     Theme,
     setThemeColor,
     InfoBar,
     InfoBarPosition,
-    PrimaryPushButton
+    PrimaryPushButton,
+    FluentIcon as FIF,   # 图标枚举
 )
 
 
 class DevicePage(QWidget):
-    #设备相关页
+    # 设备相关页
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
@@ -30,8 +30,9 @@ class DevicePage(QWidget):
         layout.addWidget(desc)
         layout.addStretch()
 
+
 class LogPage(QWidget):
-    #日志页面
+    # 日志页面
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
@@ -46,6 +47,7 @@ class LogPage(QWidget):
         layout.addWidget(title)
         layout.addWidget(desc)
         layout.addStretch()
+
 
 class SettingsPage(QWidget):
     """设置页"""
@@ -79,8 +81,9 @@ class SettingsPage(QWidget):
             parent=self
         )
 
+
 class MainWindow(FluentWindow):
-    #主窗口
+    # 主窗口
     def __init__(self):
         super().__init__()
 
@@ -90,45 +93,43 @@ class MainWindow(FluentWindow):
         self.setWindowTitle("NetWatch")
         self.resize(1000, 700)
 
+        # 创建三个子页面
         self.device_page = DevicePage(self)
         self.log_page = LogPage(self)
         self.settings_page = SettingsPage(self)
 
+        # ✨ 必须：给每个子界面设置唯一的 objectName
+        self.device_page.setObjectName("devices")
+        self.log_page.setObjectName("logs")
+        self.settings_page.setObjectName("settings")
+
         self._init_navigation()
 
     def _init_navigation(self):
-        nav = self.navigationInterface
-
-        nav.addItem(
-            routeKey="devices",
-            icon=":/qfluentwidgets/images/icons/monitor.svg",
-            text="设备",
-            onClick=lambda: self.stackedWidget.setCurrentWidget(self.device_page),
-            position=NavigationItemPosition.TOP
+        self.addSubInterface(
+            self.device_page,
+            FIF.HOME,         # 设备页图标
+            "设备",
+            NavigationItemPosition.TOP
         )
 
-        nav.addItem(
-            routeKey="logs",
-            icon=":/qfluentwidgets/images/icons/history.svg",
-            text="日志",
-            onClick=lambda: self.stackedWidget.setCurrentWidget(self.log_page),
-            position=NavigationItemPosition.TOP
+        self.addSubInterface(
+            self.log_page,
+            FIF.INFO,         # 日志页图标
+            "日志",
+            NavigationItemPosition.TOP
         )
 
-        nav.addItem(
-            routeKey="settings",
-            icon=":/qfluentwidgets/images/icons/setting.svg",
-            text="设置",
-            onClick=lambda: self.stackedWidget.setCurrentWidget(self.settings_page),
-            position=NavigationItemPosition.BOTTOM
+        self.addSubInterface(
+            self.settings_page,
+            FIF.SETTING,      # 设置页图标
+            "设置",
+            NavigationItemPosition.BOTTOM
         )
 
-        self.addSubInterface(self.device_page, "设备", "devices")
-        self.addSubInterface(self.log_page, "日志", "logs")
-        self.addSubInterface(self.settings_page, "设置", "settings")
-
-        # 默认显示设备页
         self.stackedWidget.setCurrentWidget(self.device_page)
+
+
 
 def main():
     import sys
@@ -136,6 +137,7 @@ def main():
     w = MainWindow()
     w.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
