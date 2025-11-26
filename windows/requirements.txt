@@ -1,1 +1,3 @@
 PySide6-Fluent-Widgets
+win11toast
+scapy
