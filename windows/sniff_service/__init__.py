@@ -1,1 +1,2 @@
-from .main import new_device_notify
+from .events import DeviceEvent
+from .main import start_sniff
